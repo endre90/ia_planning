@@ -1,10 +1,18 @@
 import rclpy
 import math
-import json
 
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
-from builtin_interfaces.msg import Time
+
+"""
+A joint state simulator that is agnostic to the 
+number of joints. Should be launched through a 
+launch file to configure it. In order to avoid
+compiling special messages for this simulator,
+the JointState message is used to both set the
+ref position through the position field and also 
+the velocity scaling through the velocity field.
+"""
 
 
 class RobotSimulator(Node):
@@ -14,6 +22,11 @@ class RobotSimulator(Node):
         self.act = JointState()
         self.ref = JointState()
 
+        """
+        Declaring default values. When the node is launched through a
+        launch file, these parameters can be set with different values.
+        Look at /bringup/dummies/robot_simulator_test.launch.py.
+        """
         self.name = self.declare_parameter("name", value="robot").value
         self.joint_names = self.declare_parameter(
             "joint_names", value=["j0", "j1", "j2", "j3", "j4", "j5"]
@@ -22,17 +35,29 @@ class RobotSimulator(Node):
             "initial_position", value=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         ).value
 
+        """
+        As this node simulates the joint positions, we have no idea about
+        where the robot is when we start the simulator. So, this sets the
+        initial position. 
+        """
         self.act.position = self.initial_position
         self.ref.position = self.initial_position
 
         self.act.name = self.joint_names
 
+        """
+        This creates a publisher which publishes the actual position.
+        """
         self.joint_state_publisher_ = self.create_publisher(
             JointState,
             "{name}_joint_states".format(name=self.name),
             10,
         )
 
+        """
+        This creates a subscriber which subscribes to the reference position.
+        Every time a message arrives, the callback function is called.
+        """
         self.joint_state_subscriber = self.create_subscription(
             JointState,
             "{name}_ref_joint_states".format(name=self.name),
@@ -40,8 +65,10 @@ class RobotSimulator(Node):
             10,
         )
 
+        """
+        This creates a thread to call a function at a certain rate (period).
+        """
         self.joint_state_timer_period = 0.01
-
         self.joint_state_publisher_timer = self.create_timer(
             self.joint_state_timer_period, self.joint_state_ticker
         )
@@ -49,10 +76,21 @@ class RobotSimulator(Node):
     def joint_state_subscriber_callback(self, data):
         self.ref = data
 
+    """
+    This contains the simulation logic which basically just sets the act pos
+    to the value of ref pos after some time. Every tick increments (or decrements)
+    the joint position value towards the ref pos.
+    """
+
     def joint_state_ticker(self):
 
         if not self.act.position == self.ref.position:
 
+            """
+            Robots move in such a way that all joints start moving at the same time
+            and they all stop moving at the same time. In order to do this, we had to
+            scale the we increment and decrement the values for each joint.
+            """
             ssc = [
                 abs(self.ref.position[i] - self.act.position[i])
                 for i in range(len(self.ref.position))
@@ -64,13 +102,11 @@ class RobotSimulator(Node):
             if sync_max != 0:
                 sync_max_factor = 1 / sync_max
 
-            ssc = list(
-                map(
-                    lambda i: ssc[i] * sync_max_factor,
-                    range(len(self.ref.position)),
-                )
-            )
+            ssc = [ssc[i] * sync_max_factor for i in range(len(self.ref.position))]
 
+            """
+            The act and ref pos comparison is done here. Also the speed scaling. 
+            """
             for i in range(len(self.ref.position)):
                 rad_sec = self.ref.velocity[i] * 100.0 * math.pi / 180
                 step = rad_sec * self.joint_state_timer_period
@@ -90,7 +126,16 @@ class RobotSimulator(Node):
                 else:
                     self.act.position[i] = self.ref.position[i]
 
+        """
+        Finally, after a message is composed, it is published to the topic for every tick.
+        """
         self.joint_state_publisher_.publish(self.act)
+
+
+"""
+The main function initializes the simulator class 
+and keeps it alive until it is time to terminate.
+"""
 
 
 def main(args=None):

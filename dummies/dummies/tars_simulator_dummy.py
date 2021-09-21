@@ -3,7 +3,6 @@ import time
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 
-
 POSITION_0 = [1.57, 1.57, 1.57, 1.57, 1.57, 1.57]
 POSITION_1 = [-1.57, -1.57, -1.57, -1.57, -1.57, -1.57]
 POSITION_2 = [3.14, 3.14, 3.14, 3.14, 3.14, 3.14]
@@ -14,11 +13,19 @@ SPEED_1 = 0.15
 SPEED_2 = 0.8
 SPEED_3 = 0.5
 
+"""
+This node tests the robot simulator node by sending it ref poses.
+"""
 
 class RobotSimulatorDummy(Node):
     def __init__(self):
         super().__init__("robot_simulator_dummy")
 
+        """
+        Declaring default values. When the node is launched through a
+        launch file, these parameters can be set with different values.
+        Look at /bringup/dummies/robot_simulator_test.launch.py.
+        """
         self.name = self.declare_parameter("name", value="robot").value
         self.joint_names = self.declare_parameter(
             "joint_names", value=["j0", "j1", "j2", "j3", "j4", "j5"]
