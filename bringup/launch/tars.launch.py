@@ -29,13 +29,6 @@ def generate_launch_description():
 
     tars_parameters = {
         "name": "tars",
-        "ur_type": "ur10e",
-        "joint_names": joint_names,
-        "initial_position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    }
-
-    case_parameters = {
-        "name": "case",
         "ur_type": "ur3e",
         "joint_names": joint_names,
         "initial_position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -226,25 +219,12 @@ def generate_launch_description():
     tars_robot_description = tars_robot_setup[0]
     tars_robot_declared_parameters = tars_robot_setup[1]
 
-    case_robot_setup = make_robot_description(case_parameters)
-    case_robot_description = case_robot_setup[0]
-    case_robot_declared_parameters = case_robot_setup[1]
-
     tars_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         namespace="ia_planning/tars",
         output="screen",
         parameters=[tars_robot_description],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-    )
-
-    case_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        namespace="ia_planning/case",
-        output="screen",
-        parameters=[case_robot_description],
         # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
@@ -266,24 +246,6 @@ def generate_launch_description():
         # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
-    case_simulator_node = Node(
-        package="robot_simulator",
-        executable="robot_simulator",
-        namespace="ia_planning/case",
-        output="screen",
-        parameters=[case_parameters],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-    )
-
-    case_simulator_dummy_node = Node(
-        package="dummies",
-        executable="case_simulator_dummy",
-        namespace="ia_planning",
-        output="screen",
-        parameters=[case_parameters],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-    )
-
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -302,40 +264,11 @@ def generate_launch_description():
         # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
-    # nodes_to_start = [
-    #     tars_state_publisher_node,
-    #     case_state_publisher_node,
-    #     tars_simulator_node,
-    #     case_simulator_node,
-    #     # tars_simulator_dummy_node,
-    #     # case_simulator_dummy_node,
-    #     sms_node,
-    #     rviz_node,
-    # ]
+    nodes_to_start = [
+        tars_state_publisher_node,
+        tars_simulator_node,
+        sms_node,
+        rviz_node,
+    ]
 
-    # return LaunchDescription(tars_robot_declared_parameters + nodes_to_start)
-
-    tars_launch_description = LaunchDescription(
-        tars_robot_declared_parameters + [tars_state_publisher_node]
-    )
-    included_tars_launch_description = IncludeLaunchDescription(
-        LaunchDescriptionSource(tars_launch_description)
-    )
-
-    case_launch_description = LaunchDescription(
-        case_robot_declared_parameters + [case_state_publisher_node]
-    )
-    included_case_launch_description = IncludeLaunchDescription(
-        LaunchDescriptionSource(case_launch_description)
-    )
-
-    return LaunchDescription(
-        [
-            included_tars_launch_description,
-            included_case_launch_description,
-            tars_simulator_node,
-            case_simulator_node,
-            sms_node,
-            rviz_node,
-        ]
-    )
+    return LaunchDescription(tars_robot_declared_parameters + nodes_to_start)

@@ -1,0 +1,20 @@
+# Request
+
+# parent frame
+string parent_id
+
+# child frame
+string child_id
+
+# milliseconds
+int32 deadline
+
+---
+
+# Reply
+
+# should you even look at the transform or not
+bool success
+
+# the actual result, is default (empty) if call failed
+geometry_msgs/TransformStamped transform

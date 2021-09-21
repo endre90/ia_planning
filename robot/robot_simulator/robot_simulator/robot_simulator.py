@@ -3,6 +3,7 @@ import math
 
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
+from builtin_interfaces.msg import Time
 
 """
 A joint state simulator that is agnostic to the 
@@ -43,14 +44,14 @@ class RobotSimulator(Node):
         self.act.position = self.initial_position
         self.ref.position = self.initial_position
 
-        self.act.name = self.joint_names
-
+        self.act.name = [self.name + "_" + x for x in self.joint_names]
+        # self.act.name = self.joint_names
         """
         This creates a publisher which publishes the actual position.
         """
         self.joint_state_publisher_ = self.create_publisher(
             JointState,
-            "{name}_joint_states".format(name=self.name),
+            "joint_states",
             10,
         )
 
@@ -60,7 +61,7 @@ class RobotSimulator(Node):
         """
         self.joint_state_subscriber = self.create_subscription(
             JointState,
-            "{name}_ref_joint_states".format(name=self.name),
+            "ref_joint_states",
             self.joint_state_subscriber_callback,
             10,
         )
@@ -129,6 +130,11 @@ class RobotSimulator(Node):
         """
         Finally, after a message is composed, it is published to the topic for every tick.
         """
+        time = Time()
+        now = self.get_clock().now().seconds_nanoseconds()
+        time.sec = now[0]
+        time.nanosec = now[1]
+        self.act.header.stamp = time
         self.joint_state_publisher_.publish(self.act)
 
 
