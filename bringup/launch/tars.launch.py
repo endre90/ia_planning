@@ -27,7 +27,7 @@ def generate_launch_description():
         "wrist_3_joint",
     ]
 
-    tars_parameters = {
+    parameters = {
         "name": "tars",
         "ur_type": "ur3e",
         "joint_names": joint_names,
@@ -215,60 +215,38 @@ def generate_launch_description():
 
         return (robot_description, declared_arguments)
 
-    tars_robot_setup = make_robot_description(tars_parameters)
-    tars_robot_description = tars_robot_setup[0]
-    tars_robot_declared_parameters = tars_robot_setup[1]
+    robot_setup = make_robot_description(parameters)
+    robot_description = robot_setup[0]
+    robot_declared_parameters = robot_setup[1]
 
-    tars_state_publisher_node = Node(
+    robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        namespace="ia_planning/tars",
+        namespace="ia_planning/" + parameters["name"],
         output="screen",
-        parameters=[tars_robot_description],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        parameters=[robot_description],
     )
 
-    tars_simulator_node = Node(
+    robot_simulator_node = Node(
         package="robot_simulator",
         executable="robot_simulator",
-        namespace="ia_planning/tars",
+        namespace="ia_planning/" + parameters["name"],
         output="screen",
-        parameters=[tars_parameters],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        parameters=[parameters],
     )
 
-    tars_simulator_dummy_node = Node(
+    robot_simulator_dummy_node = Node(
         package="dummies",
-        executable="tars_simulator_dummy",
-        namespace="ia_planning",
+        executable="robot_simulator_dummy",
+        namespace="ia_planning/" + parameters["name"],
         output="screen",
-        parameters=[tars_parameters],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-    )
-
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        namespace="ia_planning",
-        output="screen",
-        arguments=["-d", rviz_config_file],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
-    )
-
-    sms_node = Node(
-        package="sms",
-        executable="sms",
-        namespace="ia_planning",
-        output="screen",
-        parameters=[scenario_parameters],
-        # remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
+        parameters=[parameters],
     )
 
     nodes_to_start = [
-        tars_state_publisher_node,
-        tars_simulator_node,
-        sms_node,
-        rviz_node,
+        robot_state_publisher_node,
+        robot_simulator_node,
+        robot_simulator_dummy_node,        
     ]
 
-    return LaunchDescription(tars_robot_declared_parameters + nodes_to_start)
+    return LaunchDescription(robot_declared_parameters + nodes_to_start)

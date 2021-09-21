@@ -1,6 +1,9 @@
 import os
+import json
 from launch import LaunchDescription
+from launch import LaunchDescriptionSource
 from launch.actions import DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription
 from launch.substitutions import (
     Command,
     FindExecutable,
@@ -13,6 +16,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     bringup_dir = FindPackageShare("bringup").find("bringup")
+    rviz_config_file = os.path.join(bringup_dir, "config", "scenario_1.rviz")
 
     joint_names = [
         "shoulder_pan_joint",
@@ -24,10 +28,15 @@ def generate_launch_description():
     ]
 
     parameters = {
-        "name": "case",
-        "ur_type": "ur5e",
+        "name": "kipp",
+        "ur_type": "ur10e",
         "joint_names": joint_names,
         "initial_position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    }
+
+    scenario_parameters = {
+        "scenario_path": "/home/endre/ia_ws/src/ia_planning/scenarios/scenario_1",
+        "scenario": "scenario_1",
     }
 
     def make_robot_description(parameters):
@@ -213,7 +222,7 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        namespace="ia_planning/" + parameters["name"],
+        namespace="ia_planning" + parameters["name"],
         output="screen",
         parameters=[robot_description],
     )
@@ -221,15 +230,7 @@ def generate_launch_description():
     robot_simulator_node = Node(
         package="robot_simulator",
         executable="robot_simulator",
-        namespace="ia_planning/" + parameters["name"],
-        output="screen",
-        parameters=[parameters],
-    )
-
-    robot_simulator_dummy_node = Node(
-        package="dummies",
-        executable="robot_simulator_dummy",
-        namespace="ia_planning/" + parameters["name"],
+        namespace="ia_planning" + parameters["name"],
         output="screen",
         parameters=[parameters],
     )
@@ -237,7 +238,7 @@ def generate_launch_description():
     nodes_to_start = [
         robot_state_publisher_node,
         robot_simulator_node,
-        robot_simulator_dummy_node,        
+        
     ]
 
     return LaunchDescription(robot_declared_parameters + nodes_to_start)

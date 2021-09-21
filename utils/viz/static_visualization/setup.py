@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = "dummies"
+package_name = "static_visualization"
 
 setup(
     name=package_name,
@@ -16,18 +16,18 @@ setup(
     author_email="endree@chalmers.se",
     maintainer="Endre Erős",
     maintainer_email="endree@chalmers.se",
-    keywords=["ROS2", "Intelligent Automation"],
+    keywords=["ROS2", "Volvo Rita"],
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
         "Topic :: Software Development",
     ],
-    description="Dummies package Intelligent Automation course.",
-    license="no_license",
+    description="Static visualization package for the Volvo Rita project.",
+    license="",
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "robot_simulator_dummy = dummies.robot_simulator_dummy:main"
+            "static_visualization = static_visualization.static_visualization:main",
         ],
     },
 )

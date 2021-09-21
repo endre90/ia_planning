@@ -3,10 +3,10 @@ import time
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 
-POSITION_0 = [1.57, 1.57, 1.57, 1.57, 1.57, 1.57]
-POSITION_1 = [-1.57, -1.57, -1.57, -1.57, -1.57, -1.57]
-POSITION_2 = [3.14, 3.14, 3.14, 3.14, 3.14, 3.14]
-POSITION_3 = [-3.14, -3.14, -3.14, -3.14, -3.14, -3.14]
+POSITION_0 = [1.57, 1.57, 1.57]
+POSITION_1 = [-1.57, -1.57, -1.57]
+POSITION_2 = [3.14, 3.14, 3.14]
+POSITION_3 = [-3.14, -3.14, -3.14]
 
 SPEED_0 = 1.0
 SPEED_1 = 0.15
@@ -16,6 +16,7 @@ SPEED_3 = 0.5
 """
 This node tests the robot simulator node by sending it ref poses.
 """
+
 
 class RobotSimulatorDummy(Node):
     def __init__(self):
@@ -35,7 +36,7 @@ class RobotSimulatorDummy(Node):
         ).value
 
         self.publisher = self.create_publisher(
-            JointState, "{name}_ref_joint_states".format(name=self.name), 10
+            JointState, "ref_joint_states", 10
         )
 
         time.sleep(2)
@@ -43,7 +44,7 @@ class RobotSimulatorDummy(Node):
         for i in range(4):
             ref_pos = JointState()
             ref_pos.position = eval("POSITION_{i}".format(i=i))
-            ref_pos.name = self.joint_names
+            ref_pos.name = [self.name + "_" + x for x in self.joint_names]
             ref_pos.velocity = [
                 eval("SPEED_{i}".format(i=i)) for x in range(len(POSITION_0))
             ]
