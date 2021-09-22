@@ -27,7 +27,8 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "robot_simulator_dummy = dummies.robot_simulator_dummy:main"
+            "robot_simulator_dummy = dummies.robot_simulator_dummy:main",
+            "change_parent_dummy = dummies.change_parent_dummy:main"
         ],
     },
 )

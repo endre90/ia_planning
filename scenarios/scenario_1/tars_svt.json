@@ -1,11 +1,11 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "case_base_link",
-    "parent_frame": "world",
+    "child_frame": "tars_svt",
+    "parent_frame": "tars_rsp",
     "transform": {
         "translation": {
-            "x": 0.5,
+            "x": 0.0,
             "y": 0.0,
             "z": 0.0
         },
@@ -17,8 +17,8 @@
         }
     },
     "visualization": {
-        "mesh": "",
-        "show_mesh": false,
+        "mesh": "svt.stl",
+        "show_mesh": true,
         "interactive": false,
         "quantity": 1.0,
         "marker_scale": 0.2,

@@ -31,7 +31,7 @@ def generate_launch_description():
         "name": "tars",
         "ur_type": "ur3e",
         "joint_names": joint_names,
-        "initial_position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        "initial_position": [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0],
     }
 
     scenario_parameters = {
@@ -246,7 +246,7 @@ def generate_launch_description():
     nodes_to_start = [
         robot_state_publisher_node,
         robot_simulator_node,
-        robot_simulator_dummy_node,        
+        # robot_simulator_dummy_node,        
     ]
 
     return LaunchDescription(robot_declared_parameters + nodes_to_start)

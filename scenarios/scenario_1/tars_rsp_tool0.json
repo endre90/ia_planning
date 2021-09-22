@@ -1,11 +1,11 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "case_base_link",
-    "parent_frame": "world",
+    "child_frame": "tars_rsp_tool0",
+    "parent_frame": "tars_tool0",
     "transform": {
         "translation": {
-            "x": 0.5,
+            "x": 0.0,
             "y": 0.0,
             "z": 0.0
         },
