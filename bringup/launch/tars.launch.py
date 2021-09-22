@@ -34,6 +34,8 @@ def generate_launch_description():
         "initial_position": [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0],
     }
 
+    # home [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0]
+
     scenario_parameters = {
         "scenario_path": "/home/endre/ia_ws/src/ia_planning/scenarios/scenario_1",
         "scenario": "scenario_1",
@@ -224,12 +226,20 @@ def generate_launch_description():
         executable="robot_state_publisher",
         namespace="ia_planning/" + parameters["name"],
         output="screen",
-        parameters=[robot_description],
+        parameters=[robot_description, {"rate": "20"}],
     )
 
     robot_simulator_node = Node(
         package="robot_simulator",
         executable="robot_simulator",
+        namespace="ia_planning/" + parameters["name"],
+        output="screen",
+        parameters=[parameters],
+    )
+
+    robot_controller_node = Node(
+        package="robot_simulator",
+        executable="robot_controller",
         namespace="ia_planning/" + parameters["name"],
         output="screen",
         parameters=[parameters],
@@ -246,6 +256,7 @@ def generate_launch_description():
     nodes_to_start = [
         robot_state_publisher_node,
         robot_simulator_node,
+        robot_controller_node,
         # robot_simulator_dummy_node,        
     ]
 

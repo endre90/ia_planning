@@ -8,8 +8,6 @@ class ChangeParentDummy(Node):
     def __init__(self):
         super().__init__("change_parent_dummy")
 
-        # self.transform = Transform()
-
         self.sms_client = self.create_client(ManipulateScene, "/ia_planning/manipulate_scene")
         self.sms_request = ManipulateScene.Request()
         self.sms_response = ManipulateScene.Response()

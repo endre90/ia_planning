@@ -28,6 +28,7 @@ setup(
     entry_points={
         "console_scripts": [
             'robot_simulator = robot_simulator.robot_simulator:main',
+            'robot_controller = robot_simulator.robot_controller:main'
         ],
     },
 )
