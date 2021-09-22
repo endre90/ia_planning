@@ -1,7 +1,7 @@
 {
-    "show": false,
-    "active": true,
-    "child_frame": "blue_cube",
+    "show": true,
+    "active": false,
+    "child_frame": "pos3",
     "parent_frame": "world",
     "transform": {
         "translation": {
@@ -17,8 +17,8 @@
         }
     },
     "visualization": {
-        "mesh": "cube.stl",
-        "show_mesh": true,
+        "mesh": "",
+        "show_mesh": false,
         "interactive": false,
         "quantity": 1.0,
         "marker_scale": 0.2,

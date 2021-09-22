@@ -1,5 +1,5 @@
 {
-    "show": true,
+    "show": false,
     "active": true,
     "child_frame": "red_cube",
     "parent_frame": "world",

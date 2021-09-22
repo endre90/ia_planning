@@ -34,13 +34,6 @@ def generate_launch_description():
         "initial_position": [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0],
     }
 
-    # home [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0]
-
-    scenario_parameters = {
-        "scenario_path": "/home/endre/ia_ws/src/ia_planning/scenarios/scenario_1",
-        "scenario": "scenario_1",
-    }
-
     def make_robot_description(parameters):
         declared_arguments = []
 
@@ -245,9 +238,17 @@ def generate_launch_description():
         parameters=[parameters],
     )
 
-    robot_simulator_dummy_node = Node(
-        package="dummies",
-        executable="robot_simulator_dummy",
+    # robot_simulator_dummy_node = Node(
+    #     package="dummies",
+    #     executable="robot_simulator_dummy",
+    #     namespace="ia_planning/" + parameters["name"],
+    #     output="screen",
+    #     parameters=[parameters],
+    # )
+
+    gripper_handler_node = Node(
+        package="handlers",
+        executable="gripper_handler",
         namespace="ia_planning/" + parameters["name"],
         output="screen",
         parameters=[parameters],
@@ -257,6 +258,7 @@ def generate_launch_description():
         robot_state_publisher_node,
         robot_simulator_node,
         robot_controller_node,
+        gripper_handler_node,
         # robot_simulator_dummy_node,        
     ]
 

@@ -1,12 +1,12 @@
 {
-    "show": false,
-    "active": true,
-    "child_frame": "blue_cube",
+    "show": true,
+    "active": false,
+    "child_frame": "pos2",
     "parent_frame": "world",
     "transform": {
         "translation": {
             "x": 0.0,
-            "y": -0.2,
+            "y": 0.0,
             "z": 0.05
         },
         "rotation": {
@@ -17,8 +17,8 @@
         }
     },
     "visualization": {
-        "mesh": "cube.stl",
-        "show_mesh": true,
+        "mesh": "",
+        "show_mesh": false,
         "interactive": false,
         "quantity": 1.0,
         "marker_scale": 0.2,

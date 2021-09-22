@@ -234,9 +234,17 @@ def generate_launch_description():
         parameters=[parameters],
     )
 
-    robot_simulator_dummy_node = Node(
-        package="dummies",
-        executable="robot_simulator_dummy",
+    # robot_simulator_dummy_node = Node(
+    #     package="dummies",
+    #     executable="robot_simulator_dummy",
+    #     namespace="ia_planning/" + parameters["name"],
+    #     output="screen",
+    #     parameters=[parameters],
+    # )
+
+    gripper_handler_node = Node(
+        package="handlers",
+        executable="gripper_handler",
         namespace="ia_planning/" + parameters["name"],
         output="screen",
         parameters=[parameters],
@@ -246,7 +254,8 @@ def generate_launch_description():
         robot_state_publisher_node,
         robot_simulator_node,
         robot_controller_node,
-        # robot_simulator_dummy_node,        
+        gripper_handler_node,
+        # robot_simulator_dummy_node,
     ]
 
     return LaunchDescription(robot_declared_parameters + nodes_to_start)

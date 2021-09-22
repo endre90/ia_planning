@@ -43,16 +43,24 @@ def generate_launch_description():
         parameters=[scenario_parameters, big_file_paths],
     )
 
-    include_tars = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(bringup_dir, "launch", "tars.launch.py")
-        )
+    cube_handler_node = Node(
+        package="handlers",
+        executable="cube_handler",
+        namespace="ia_planning",
+        output="screen",
     )
-    include_case = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(bringup_dir, "launch", "case.launch.py")
-        )
-    )
+
+    # Messes up the description parameters, use in separate launch files for now
+    # include_tars = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(bringup_dir, "launch", "tars.launch.py")
+    #     )
+    # )
+    # include_case = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(bringup_dir, "launch", "case.launch.py")
+    #     )
+    # )
 
     nodes_to_start = [
         # include_tars,
@@ -60,6 +68,7 @@ def generate_launch_description():
         sms_node,
         rviz_node,
         static_visualization_node,
+        cube_handler_node,
     ]
 
     return LaunchDescription(nodes_to_start)
