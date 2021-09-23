@@ -1,13 +1,13 @@
 {
-    "show": false,
+    "show": true,
     "active": true,
     "child_frame": "blue_cube",
-    "parent_frame": "world",
+    "parent_frame": "pos3",
     "transform": {
         "translation": {
             "x": 0.0,
-            "y": -0.2,
-            "z": 0.05
+            "y": 0.0,
+            "z": 0.0
         },
         "rotation": {
             "x": 0.0,

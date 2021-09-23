@@ -64,7 +64,7 @@ class GripperHandler(Node):
 
         self.cube_state_subscriber = self.create_subscription(
             CubeState,
-            "cube_state",
+            "/ia_planning/cube_state",
             self.cube_state_subscriber_callback,
             10,
         )
