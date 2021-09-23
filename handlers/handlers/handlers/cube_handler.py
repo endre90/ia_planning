@@ -20,6 +20,9 @@ class CubeHandler(Node):
         self.sms_call_success = False
         self.sms_call_done = False
 
+        while not self.sms_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("sms service not available, waiting again...")
+
         self.change_state_service = self.create_service(
             ChangeCubeState, "change_cube_state", self.change_state_callback
         )
@@ -46,16 +49,12 @@ class CubeHandler(Node):
         return response
 
     def randomize_cubes(self):
-        time.sleep(1)
         poses = ["pos1", "pos2", "pos3"]
         cubes = ["red_cube", "blue_cube", "green_cube"]
         order = {
             pose: cubes.pop(cubes.index(random.choice(cubes))) for pose in poses
         }
         for ord in order:
-            self.get_logger().info(
-                "sms order: {pos} : {cube}".format(pos=ord, cube=order[ord])
-            )
             self.send_change_parent_request(order[ord], ord)
         return order
 

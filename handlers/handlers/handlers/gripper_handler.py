@@ -75,8 +75,8 @@ class GripperHandler(Node):
         self.cube_order = {"pos1": "unknown", "pos2": "unknown", "pos3": "unknown"}
 
     def get_cube(self):
-        if (self.act_pos != "home" or self.act_pos != "unknown"):
-            self.cube_order[self.act_pos]
+        if any(str(self.act_pos) == x for x in ['pos1', 'pos2', 'pos3']):
+            return self.cube_order[self.act_pos]
 
     def state_ticker(self):
         self.state_msg.data = self.gripping
@@ -92,7 +92,8 @@ class GripperHandler(Node):
 
     def command_subscriber_callback(self, data):
         cube = self.get_cube()
-        if (cube != "empty" or cube != "unknown" or cube != None):
+        self.get_logger().info("CUBE 1: %s" % cube)
+        if cube in ["red_cube", "green_cube", "blue_cube"]:
             if data.data:
                 self.attach(cube)
             else:
@@ -103,24 +104,37 @@ class GripperHandler(Node):
             self.send_change_parent_request(
                 cube, "{robot}_svt_tcp".format(robot=self.name)
             )
-            self.gripping = True
+            if self.sms_call_done:
+                self.gripping = True
+                self.sms_call_done = False
 
     def detach(self, cube):
         if self.gripping:
             self.send_change_parent_request(cube, "world")
-            self.gripping = False
-
+            if self.sms_call_done:
+                self.gripping = False
+                self.sms_call_done = False
+        
     def send_change_parent_request(self, child, parent):
+
+        transform = Transform()
+        transform.translation.x = 0.0
+        transform.translation.y = 0.0
+        transform.translation.z = 0.0
+        transform.rotation.x = 0.0
+        transform.rotation.y = 0.0
+        transform.rotation.z = 0.0
+        transform.rotation.w = 1.0
 
         self.sms_request.remove = False
         self.sms_request.child_frame = child
         self.sms_request.parent_frame = parent
-        self.sms_request.transform = Transform()
+        self.sms_request.transform = transform
         self.sms_request.same_position_in_world = True
         self.sms_future = self.sms_client.call_async(self.sms_request)
         self.get_logger().info("sms request sent: %s" % self.sms_request)
         while rclpy.ok():
-            rclpy.spin_once(self)
+            # rclpy.spin_once(self)
             if self.sms_future.done():
                 try:
                     response = self.sms_future.result()
