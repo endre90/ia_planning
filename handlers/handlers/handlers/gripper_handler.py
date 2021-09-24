@@ -1,11 +1,73 @@
 import rclpy
-import random
+import time
 from rclpy.node import Node
 from sms_msgs.srv import ManipulateScene
 from std_msgs.msg import Bool, String
 from geometry_msgs.msg import Transform
 from handlers_msgs.msg import CubeState
 from handlers_msgs.srv import ChangeCubeState
+from rclpy.executors import MultiThreadedExecutor
+
+
+class Variables:
+    trigger_request = False
+    child = ""
+    parent = ""
+
+
+class ChangeParentRequest(Node):
+    def __init__(self):
+        super().__init__("change_parent_request")
+
+        self.sms_client = self.create_client(
+            ManipulateScene, "/ia_planning/manipulate_scene"
+        )
+        self.sms_request = ManipulateScene.Request()
+        self.sms_response = ManipulateScene.Response()
+        self.sms_call_success = False
+        self.sms_call_done = False
+
+        while not self.sms_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("sms service not available, waiting again...")
+
+        self.create_timer(0.5, self.call_cps)
+
+        self.get_logger().info("ChangeParentRequest")
+
+    def call_cps(self):
+        if Variables.trigger_request and Variables.parent != "" and Variables.child != "":
+            self.send_change_parent_request(Variables.child, Variables.parent)
+            Variables.trigger_request = False
+
+    def send_change_parent_request(self, child, parent):
+
+        self.sms_request.remove = False
+        self.sms_request.child_frame = child
+        self.sms_request.parent_frame = parent
+        self.sms_request.transform = Transform()
+        self.sms_request.same_position_in_world = True
+        self.sms_future = self.sms_client.call_async(self.sms_request)
+        self.get_logger().info("sms request sent: %s" % self.sms_request)
+        while rclpy.ok():
+            rclpy.spin_once(self)
+            if self.sms_future.done():
+                try:
+                    response = self.sms_future.result()
+                except Exception as e:
+                    self.get_logger().info("sms service call failed with: %r" % (e,))
+                    self.sms_call_success = False
+                else:
+                    self.sms_response = response
+                    self.get_logger().info(
+                        "sms service call succeded with: %s" % self.sms_response
+                    )
+                    self.sms_call_success = True
+                finally:
+                    self.get_logger().info(
+                        "sms service call done successfully: %s" % self.sms_call_success
+                    )
+                    self.sms_call_done = True
+                break
 
 
 class GripperHandler(Node):
@@ -16,26 +78,7 @@ class GripperHandler(Node):
 
         self.name = self.declare_parameter("name", value="robot").value
 
-        self.sms_client = self.create_client(ManipulateScene, "/ia_planning/manipulate_scene")
-        self.sms_request = ManipulateScene.Request()
-        self.sms_response = ManipulateScene.Response()
-        self.sms_call_success = False
-        self.sms_call_done = False
-
-        self.cps_client = self.create_client(ChangeCubeState, "/ia_planning/change_cube_state")
-        self.cps_request = ManipulateScene.Request()
-        self.cps_response = ManipulateScene.Response()
-        self.cps_call_success = False
-        self.cps_call_done = False
-
-        while not self.sms_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info("sms service not available, waiting again...")
-
-        while not self.cps_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info("cps service not available, waiting again...")
-
-        self.parent_id = ""
-        self.child_id = ""
+        self.get_logger().info("GripperHandler")
 
         self.state_publisher_ = self.create_publisher(
             Bool,
@@ -75,7 +118,7 @@ class GripperHandler(Node):
         self.cube_order = {"pos1": "unknown", "pos2": "unknown", "pos3": "unknown"}
 
     def get_cube(self):
-        if any(str(self.act_pos) == x for x in ['pos1', 'pos2', 'pos3']):
+        if any(str(self.act_pos) == x for x in ["pos1", "pos2", "pos3"]):
             return self.cube_order[self.act_pos]
 
     def state_ticker(self):
@@ -101,68 +144,38 @@ class GripperHandler(Node):
 
     def attach(self, cube):
         if not self.gripping:
-            self.send_change_parent_request(
-                cube, "{robot}_svt_tcp".format(robot=self.name)
-            )
-            if self.sms_call_done:
-                self.gripping = True
-                self.sms_call_done = False
+            Variables.child = cube
+            Variables.parent = "{robot}_svt_tcp".format(robot=self.name)
+            Variables.trigger_request = True
+            self.gripping = True
 
     def detach(self, cube):
         if self.gripping:
-            self.send_change_parent_request(cube, "world")
-            if self.sms_call_done:
-                self.gripping = False
-                self.sms_call_done = False
-        
-    def send_change_parent_request(self, child, parent):
-
-        transform = Transform()
-        transform.translation.x = 0.0
-        transform.translation.y = 0.0
-        transform.translation.z = 0.0
-        transform.rotation.x = 0.0
-        transform.rotation.y = 0.0
-        transform.rotation.z = 0.0
-        transform.rotation.w = 1.0
-
-        self.sms_request.remove = False
-        self.sms_request.child_frame = child
-        self.sms_request.parent_frame = parent
-        self.sms_request.transform = transform
-        self.sms_request.same_position_in_world = True
-        self.sms_future = self.sms_client.call_async(self.sms_request)
-        self.get_logger().info("sms request sent: %s" % self.sms_request)
-        while rclpy.ok():
-            # rclpy.spin_once(self)
-            if self.sms_future.done():
-                try:
-                    response = self.sms_future.result()
-                except Exception as e:
-                    self.get_logger().info("sms service call failed with: %r" % (e,))
-                    self.sms_call_success = False
-                else:
-                    self.sms_response = response
-                    self.get_logger().info(
-                        "sms service call succeded with: %s" % self.sms_response
-                    )
-                    self.sms_call_success = True
-                finally:
-                    self.get_logger().info(
-                        "sms service call done successfully: %s" % self.sms_call_success
-                    )
-                    self.sms_call_done = True
-                break
+            Variables.child = cube
+            Variables.parent = "world"
+            Variables.trigger_request = True
+            self.gripping = False
 
 
 def main(args=None):
     rclpy.init(args=args)
+    try:
+        gh = GripperHandler()
+        cpr = ChangeParentRequest()
 
-    client = GripperHandler()
-    rclpy.spin(client)
+        executor = MultiThreadedExecutor()
+        executor.add_node(gh)
+        executor.add_node(cpr)
 
-    client.destroy_node()
-    rclpy.shutdown()
+        try:
+            executor.spin()
+        finally:
+            executor.shutdown()
+            gh.destroy_node()
+            cpr.destroy_node()
+
+    finally:
+        rclpy.shutdown()
 
 
 if __name__ == "__main__":
