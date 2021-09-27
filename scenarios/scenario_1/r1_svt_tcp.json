@@ -1,8 +1,8 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "case_svt_tcp",
-    "parent_frame": "case_svt",
+    "child_frame": "r1_svt_tcp",
+    "parent_frame": "r1_svt",
     "transform": {
         "translation": {
             "x": 0.0,

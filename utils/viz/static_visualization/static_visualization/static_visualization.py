@@ -101,11 +101,6 @@ class StaticVisualization(Node):
             x for x in self.static_items_jsons if x["visualization"]["show_mesh"]
         ]
 
-        # self.log_msg(
-        #     "INFO",
-        #     ("added {nr} non-interactive items".format(nr=str(len(self.static_items)))),
-        # )
-
         self.marker_array_publisher = self.create_publisher(
             MarkerArray, "static_markers", 10
         )
@@ -114,33 +109,12 @@ class StaticVisualization(Node):
 
         self.color = ColorRGBA()
 
-        self.marker_timer_period = 0.01
+        self.marker_timer_period = 0.05
         self.marker_timer = self.create_timer(
             self.marker_timer_period, self.publish_markers
         )
 
         self.tf_lookup()
-
-    # def log_msg(self, severity, msg):
-    #     log_msg = Log()
-    #     log_msg.severity = severity
-    #     log_msg.timestamp = str(datetime.datetime.now())
-    #     log_msg.node = self.node_name
-    #     log_msg.message = str(msg)
-    #     self.log_publisher.publish(log_msg)
-
-    #     if severity == "DEBUG":
-    #         self.get_logger().debug("%s" % str(msg))
-    #     if severity == "INFO":
-    #         self.get_logger().info("%s" % str(msg))
-    #     if severity == "ERROR":
-    #         self.get_logger().error("%s" % str(msg))
-    #     if severity == "WARNING":
-    #         self.get_logger().warning("%s" % str(msg))
-    #     if severity == "FATAL":
-    #         self.get_logger().fatal("%s" % str(msg))
-
-    #     return log_msg
 
     def tf_lookup(self):
         def tf_lookup_callback():
@@ -148,7 +122,7 @@ class StaticVisualization(Node):
             # wait a bit for the tf to become alive
             time.sleep(5)
 
-            rate = self.create_rate(100)
+            rate = self.create_rate(20)
             while rclpy.ok():
                 try:
                     for x in self.individual_markers:

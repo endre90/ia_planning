@@ -1,24 +1,24 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "tars_svt_tcp",
-    "parent_frame": "tars_svt",
+    "child_frame": "r1_svt",
+    "parent_frame": "r1_rsp",
     "transform": {
         "translation": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.313365
+            "z": 0.0
         },
         "rotation": {
-            "x": 1.0,
+            "x": 0.0,
             "y": 0.0,
             "z": 0.0,
-            "w": 0.0
+            "w": 1.0
         }
     },
     "visualization": {
-        "mesh": "",
-        "show_mesh": false,
+        "mesh": "svt.stl",
+        "show_mesh": true,
         "interactive": false,
         "quantity": 1.0,
         "marker_scale": 0.2,
