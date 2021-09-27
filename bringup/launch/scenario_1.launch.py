@@ -1,7 +1,5 @@
 import os
 from launch import LaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.actions import IncludeLaunchDescription
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
@@ -50,21 +48,7 @@ def generate_launch_description():
         output="screen",
     )
 
-    # Messes up the description parameters, use in separate launch files for now
-    # include_tars = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(bringup_dir, "launch", "tars.launch.py")
-    #     )
-    # )
-    # include_case = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(bringup_dir, "launch", "case.launch.py")
-    #     )
-    # )
-
     nodes_to_start = [
-        # include_tars,
-        # include_case,
         sms_node,
         rviz_node,
         static_visualization_node,

@@ -53,7 +53,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /ia_planning/tars/robot_description
+        Value: /ia_planning/r1/robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -61,53 +61,53 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        tars_base:
+        r1_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        tars_base_link:
+        r1_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        tars_base_link_inertia:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        tars_flange:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        tars_forearm_link:
+        r1_base_link_inertia:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        tars_shoulder_link:
+        r1_flange:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        r1_forearm_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        tars_tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        tars_upper_arm_link:
+        r1_shoulder_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        tars_wrist_1_link:
+        r1_tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        r1_upper_arm_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        tars_wrist_2_link:
+        r1_wrist_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        tars_wrist_3_link:
+        r1_wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r1_wrist_3_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -127,7 +127,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /ia_planning/case/robot_description
+        Value: /ia_planning/r2/robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -135,53 +135,53 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        case_base:
+        r2_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        case_base_link:
+        r2_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        case_base_link_inertia:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        case_flange:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        case_forearm_link:
+        r2_base_link_inertia:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        case_shoulder_link:
+        r2_flange:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        r2_forearm_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        case_tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        case_upper_arm_link:
+        r2_shoulder_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        case_wrist_1_link:
+        r2_tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        r2_upper_arm_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        case_wrist_2_link:
+        r2_wrist_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        case_wrist_3_link:
+        r2_wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        r2_wrist_3_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -196,59 +196,79 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        case_base:
-          Value: true
-        case_base_link:
-          Value: true
-        case_base_link_inertia:
-          Value: true
-        case_flange:
-          Value: true
-        case_forearm_link:
-          Value: true
-        case_rsp:
-          Value: true
-        case_rsp_tool0:
-          Value: true
-        case_shoulder_link:
-          Value: true
-        case_svt:
-          Value: true
-        case_svt_tcp:
-          Value: true
-        case_tool0:
-          Value: true
-        case_upper_arm_link:
-          Value: true
-        case_wrist_1_link:
-          Value: true
-        case_wrist_2_link:
-          Value: true
-        case_wrist_3_link:
+        blue_cube:
           Value: true
         floor:
           Value: true
-        tars_base:
+        green_cube:
           Value: true
-        tars_base_link:
+        pos1:
           Value: true
-        tars_base_link_inertia:
+        pos2:
           Value: true
-        tars_flange:
+        pos3:
           Value: true
-        tars_forearm_link:
+        r1_base:
           Value: true
-        tars_shoulder_link:
+        r1_base_link:
           Value: true
-        tars_tool0:
+        r1_base_link_inertia:
           Value: true
-        tars_upper_arm_link:
+        r1_flange:
           Value: true
-        tars_wrist_1_link:
+        r1_forearm_link:
           Value: true
-        tars_wrist_2_link:
+        r1_rsp:
           Value: true
-        tars_wrist_3_link:
+        r1_rsp_tool0:
+          Value: true
+        r1_shoulder_link:
+          Value: true
+        r1_svt:
+          Value: true
+        r1_svt_tcp:
+          Value: true
+        r1_tool0:
+          Value: true
+        r1_upper_arm_link:
+          Value: true
+        r1_wrist_1_link:
+          Value: true
+        r1_wrist_2_link:
+          Value: true
+        r1_wrist_3_link:
+          Value: true
+        r2_base:
+          Value: true
+        r2_base_link:
+          Value: true
+        r2_base_link_inertia:
+          Value: true
+        r2_flange:
+          Value: true
+        r2_forearm_link:
+          Value: true
+        r2_rsp:
+          Value: true
+        r2_rsp_tool0:
+          Value: true
+        r2_shoulder_link:
+          Value: true
+        r2_svt:
+          Value: true
+        r2_svt_tcp:
+          Value: true
+        r2_tool0:
+          Value: true
+        r2_upper_arm_link:
+          Value: true
+        r2_wrist_1_link:
+          Value: true
+        r2_wrist_2_link:
+          Value: true
+        r2_wrist_3_link:
+          Value: true
+        red_cube:
           Value: true
         world:
           Value: true
@@ -259,38 +279,51 @@ Visualization Manager:
       Show Names: false
       Tree:
         world:
-          case_base_link:
-            case_base:
-              {}
-            case_base_link_inertia:
-              case_shoulder_link:
-                case_upper_arm_link:
-                  case_forearm_link:
-                    case_wrist_1_link:
-                      case_wrist_2_link:
-                        case_wrist_3_link:
-                          case_flange:
-                            case_tool0:
-                              case_rsp_tool0:
-                                case_rsp:
-                                  case_svt:
-                                    case_svt_tcp:
-                                      {}
           floor:
             {}
-          tars_base_link:
-            tars_base:
+          pos1:
+            red_cube:
               {}
-            tars_base_link_inertia:
-              tars_shoulder_link:
-                tars_upper_arm_link:
-                  tars_forearm_link:
-                    tars_wrist_1_link:
-                      tars_wrist_2_link:
-                        tars_wrist_3_link:
-                          tars_flange:
-                            tars_tool0:
-                              {}
+          pos2:
+            green_cube:
+              {}
+          pos3:
+            blue_cube:
+              {}
+          r1_base_link:
+            r1_base:
+              {}
+            r1_base_link_inertia:
+              r1_shoulder_link:
+                r1_upper_arm_link:
+                  r1_forearm_link:
+                    r1_wrist_1_link:
+                      r1_wrist_2_link:
+                        r1_wrist_3_link:
+                          r1_flange:
+                            r1_tool0:
+                              r1_rsp_tool0:
+                                r1_rsp:
+                                  r1_svt:
+                                    r1_svt_tcp:
+                                      {}
+          r2_base_link:
+            r2_base:
+              {}
+            r2_base_link_inertia:
+              r2_shoulder_link:
+                r2_upper_arm_link:
+                  r2_forearm_link:
+                    r2_wrist_1_link:
+                      r2_wrist_2_link:
+                        r2_wrist_3_link:
+                          r2_flange:
+                            r2_tool0:
+                              r2_rsp_tool0:
+                                r2_rsp:
+                                  r2_svt:
+                                    r2_svt_tcp:
+                                      {}
       Update Interval: 0
       Value: true
     - Class: rviz_default_plugins/MarkerArray
@@ -351,25 +384,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.2977991104125977
+      Distance: 2.2055678367614746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.19405128061771393
-        Y: 0.22940930724143982
-        Z: 0.03283606469631195
+        X: 0.007302550598978996
+        Y: 0.051601044833660126
+        Z: 0.42082974314689636
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5547930002212524
+      Pitch: 0.539793074131012
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.7015862464904785
+      Yaw: 1.20839262008667
     Saved: ~
 Window Geometry:
   Displays:

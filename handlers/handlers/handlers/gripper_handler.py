@@ -10,9 +10,12 @@ from rclpy.executors import MultiThreadedExecutor
 
 
 class Variables:
-    trigger_request = False
+    trigger_cps_request = False
+    trigger_ccs_request = False
     child = ""
     parent = ""
+    change_cube_state_pose = ""
+    change_cube_state_cube = ""
 
 
 class ChangeParentRequest(Node):
@@ -22,10 +25,8 @@ class ChangeParentRequest(Node):
         self.sms_client = self.create_client(
             ManipulateScene, "/ia_planning/manipulate_scene"
         )
+
         self.sms_request = ManipulateScene.Request()
-        self.sms_response = ManipulateScene.Response()
-        self.sms_call_success = False
-        self.sms_call_done = False
 
         while not self.sms_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("sms service not available, waiting again...")
@@ -35,9 +36,13 @@ class ChangeParentRequest(Node):
         self.get_logger().info("ChangeParentRequest")
 
     def call_cps(self):
-        if Variables.trigger_request and Variables.parent != "" and Variables.child != "":
+        if (
+            Variables.trigger_cps_request
+            and Variables.parent != ""
+            and Variables.child != ""
+        ):
             self.send_change_parent_request(Variables.child, Variables.parent)
-            Variables.trigger_request = False
+            Variables.trigger_cps_request = False
 
     def send_change_parent_request(self, child, parent):
 
@@ -48,26 +53,42 @@ class ChangeParentRequest(Node):
         self.sms_request.same_position_in_world = True
         self.sms_future = self.sms_client.call_async(self.sms_request)
         self.get_logger().info("sms request sent: %s" % self.sms_request)
-        while rclpy.ok():
-            rclpy.spin_once(self)
-            if self.sms_future.done():
-                try:
-                    response = self.sms_future.result()
-                except Exception as e:
-                    self.get_logger().info("sms service call failed with: %r" % (e,))
-                    self.sms_call_success = False
-                else:
-                    self.sms_response = response
-                    self.get_logger().info(
-                        "sms service call succeded with: %s" % self.sms_response
-                    )
-                    self.sms_call_success = True
-                finally:
-                    self.get_logger().info(
-                        "sms service call done successfully: %s" % self.sms_call_success
-                    )
-                    self.sms_call_done = True
-                break
+
+
+class ChangeCubeStateRequest(Node):
+    def __init__(self):
+        super().__init__("change_cube_state_request")
+
+        self.ccs_client = self.create_client(
+            ChangeCubeState, "/ia_planning/change_cube_state"
+        )
+
+        self.ccs_request = ChangeCubeState.Request()
+
+        while not self.ccs_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("ccs service not available, waiting again...")
+
+        self.create_timer(0.5, self.call_ccs)
+
+        self.get_logger().info("ChangeCubeStateRequest")
+
+    def call_ccs(self):
+        if (
+            Variables.trigger_ccs_request
+            and Variables.change_cube_state_pose != ""
+            and Variables.change_cube_state_cube != ""
+        ):
+            self.send_cube_state_request(
+                Variables.change_cube_state_pose, Variables.change_cube_state_cube
+            )
+            Variables.trigger_ccs_request = False
+
+    def send_cube_state_request(self, pose, cube):
+
+        self.ccs_request.pos = pose
+        self.ccs_request.cube = cube
+        self.ccs_future = self.ccs_client.call_async(self.ccs_request)
+        self.get_logger().info("ccs request sent: %s" % self.ccs_request)
 
 
 class GripperHandler(Node):
@@ -113,7 +134,11 @@ class GripperHandler(Node):
         )
 
         self.gripping = False
+        self.grip = False
+        self.pre_grip = False
+
         self.act_pos = "unknown"
+        self.holding_cube = "unknown"
 
         self.cube_order = {"pos1": "unknown", "pos2": "unknown", "pos3": "unknown"}
 
@@ -134,27 +159,41 @@ class GripperHandler(Node):
         self.cube_order["pos3"] = data.pos3
 
     def command_subscriber_callback(self, data):
+        self.grip = data.data
         cube = self.get_cube()
-        self.get_logger().info("CUBE 1: %s" % cube)
         if cube in ["red_cube", "green_cube", "blue_cube"]:
-            if data.data:
+            if self.grip and not self.pre_grip:
                 self.attach(cube)
-            else:
-                self.detach(cube)
+                self.pre_grip = True
+        if cube == "empty":
+            if self.holding_cube in ["red_cube", "green_cube", "blue_cube"]:
+                if not self.grip and self.pre_grip:
+                    self.detach(self.holding_cube)
+                    self.pre_grip = False
 
     def attach(self, cube):
         if not self.gripping:
+            self.get_logger().info("TRIGGER ATTACH")
             Variables.child = cube
             Variables.parent = "{robot}_svt_tcp".format(robot=self.name)
-            Variables.trigger_request = True
+            Variables.trigger_cps_request = True
             self.gripping = True
+            self.holding_cube = cube
+            Variables.change_cube_state_pose = self.act_pos
+            Variables.change_cube_state_cube = "empty"
+            Variables.trigger_ccs_request = True
 
     def detach(self, cube):
         if self.gripping:
+            self.get_logger().info("TRIGGER DETACH")
             Variables.child = cube
             Variables.parent = "world"
-            Variables.trigger_request = True
+            Variables.trigger_cps_request = True
             self.gripping = False
+            self.holding_cube = "none"
+            Variables.change_cube_state_pose = self.act_pos
+            Variables.change_cube_state_cube = cube
+            Variables.trigger_ccs_request = True
 
 
 def main(args=None):
@@ -162,10 +201,12 @@ def main(args=None):
     try:
         gh = GripperHandler()
         cpr = ChangeParentRequest()
+        ccs = ChangeCubeStateRequest()
 
         executor = MultiThreadedExecutor()
         executor.add_node(gh)
         executor.add_node(cpr)
+        executor.add_node(ccs)
 
         try:
             executor.spin()
@@ -173,6 +214,7 @@ def main(args=None):
             executor.shutdown()
             gh.destroy_node()
             cpr.destroy_node()
+            ccs.destroy_node()
 
     finally:
         rclpy.shutdown()

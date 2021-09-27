@@ -5,14 +5,14 @@ from std_msgs.msg import String
 from sensor_msgs.msg import JointState
 from builtin_interfaces.msg import Time
 
-TARS_POSES = {
+r1_poses = {
     "pos1": [-125.81, -103.99, -47.25, -117.90, 90.62, 54.15],
     "pos2": [-155.66, -88.66, -64.57, -116.34, 90.96, 24.30],
     "pos3": [-192.49, -105.69, -44.55, -119.78, 90.09, -12.49],
     "home": [0.0, -90, 0.0, 0.0, 0.0, 0.0],
 }
 
-CASE_POSES = {
+r2_poses = {
     "pos1": [-7.55, -95.36, -97.31, -77.34, 90.09, -7.55],
     "pos2": [15.38, -90.0, -102.96, -77.02, 90.09, 15.38],
     "pos3": [36.07, -95.29, -97.41, -77.25, 90.07, 36.07],
@@ -28,15 +28,15 @@ class RobotController(Node):
 
         self.name = self.declare_parameter("name", value="robot").value
 
-        if self.name == "tars":
+        if self.name == "r1":
             self.poses = {
-                y: [round(x * 3.1415926 / 180, 5) for x in TARS_POSES[y]]
-                for y in TARS_POSES
+                y: [round(x * 3.1415926 / 180, 5) for x in r1_poses[y]]
+                for y in r1_poses
             }
-        elif self.name == "case":
+        elif self.name == "r2":
             self.poses = {
-                y: [round(x * 3.1415926 / 180, 5) for x in CASE_POSES[y]]
-                for y in CASE_POSES
+                y: [round(x * 3.1415926 / 180, 5) for x in r2_poses[y]]
+                for y in r2_poses
             }
         else:
             self.poses = {"home": [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0]}

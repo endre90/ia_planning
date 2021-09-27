@@ -1,9 +1,5 @@
-import os
-import json
 from launch import LaunchDescription
-from launch import LaunchDescriptionSource
 from launch.actions import DeclareLaunchArgument
-from launch.actions import IncludeLaunchDescription
 from launch.substitutions import (
     Command,
     FindExecutable,
@@ -15,8 +11,6 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    bringup_dir = FindPackageShare("bringup").find("bringup")
-    rviz_config_file = os.path.join(bringup_dir, "config", "scenario_1.rviz")
 
     joint_names = [
         "shoulder_pan_joint",
@@ -28,7 +22,7 @@ def generate_launch_description():
     ]
 
     parameters = {
-        "name": "tars",
+        "name": "r1",
         "ur_type": "ur3e",
         "joint_names": joint_names,
         "initial_position": [0.0, -1.5707, 0.0, 0.0, 0.0, 0.0],
@@ -219,7 +213,7 @@ def generate_launch_description():
         executable="robot_state_publisher",
         namespace="ia_planning/" + parameters["name"],
         output="screen",
-        parameters=[robot_description, {"rate": "20"}],
+        parameters=[robot_description],
     )
 
     robot_simulator_node = Node(
@@ -238,14 +232,6 @@ def generate_launch_description():
         parameters=[parameters],
     )
 
-    # robot_simulator_dummy_node = Node(
-    #     package="dummies",
-    #     executable="robot_simulator_dummy",
-    #     namespace="ia_planning/" + parameters["name"],
-    #     output="screen",
-    #     parameters=[parameters],
-    # )
-
     gripper_handler_node = Node(
         package="handlers",
         executable="gripper_handler",
@@ -258,8 +244,7 @@ def generate_launch_description():
         robot_state_publisher_node,
         robot_simulator_node,
         robot_controller_node,
-        gripper_handler_node,
-        # robot_simulator_dummy_node,        
+        gripper_handler_node,       
     ]
 
     return LaunchDescription(robot_declared_parameters + nodes_to_start)

@@ -3,6 +3,7 @@ import random
 import time
 from rclpy.node import Node
 from sms_msgs.srv import ManipulateScene
+from sms_msgs.srv import LookupTransform
 from geometry_msgs.msg import Transform
 from handlers_msgs.msg import CubeState
 from handlers_msgs.srv import ChangeCubeState
@@ -43,8 +44,9 @@ class CubeHandler(Node):
         )
 
     def change_state_callback(self, request, response):
+        self.get_logger().info("ChangeCubeStateRequest triggered")
         self.cube_order[request.pos] = request.cube
-        self.send_change_parent_request(request.pos, request.cube)
+        #self.send_change_parent_request(request.pos, request.cube)
         response.result = True
         return response
 

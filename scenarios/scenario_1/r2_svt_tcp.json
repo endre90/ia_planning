@@ -1,19 +1,19 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "case_rsp_tool0",
-    "parent_frame": "case_tool0",
+    "child_frame": "r2_svt_tcp",
+    "parent_frame": "r2_svt",
     "transform": {
         "translation": {
             "x": 0.0,
             "y": 0.0,
-            "z": 0.0
+            "z": 0.313365
         },
         "rotation": {
-            "x": 0.0,
+            "x": 1.0,
             "y": 0.0,
             "z": 0.0,
-            "w": 1.0
+            "w": 0.0
         }
     },
     "visualization": {

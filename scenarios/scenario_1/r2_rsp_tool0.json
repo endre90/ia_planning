@@ -1,8 +1,8 @@
 {
     "show": true,
     "active": false,
-    "child_frame": "case_svt",
-    "parent_frame": "case_rsp",
+    "child_frame": "r2_rsp_tool0",
+    "parent_frame": "r2_tool0",
     "transform": {
         "translation": {
             "x": 0.0,
@@ -17,8 +17,8 @@
         }
     },
     "visualization": {
-        "mesh": "svt.stl",
-        "show_mesh": true,
+        "mesh": "",
+        "show_mesh": false,
         "interactive": false,
         "quantity": 1.0,
         "marker_scale": 0.2,
