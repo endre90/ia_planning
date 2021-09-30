@@ -5,3 +5,6 @@ RUN apt-get update -qqy \
 
 COPY . /ros/
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && cd /ros/ && colcon build
+
+COPY launch.bash /
+RUN chmod +x launch.bash
