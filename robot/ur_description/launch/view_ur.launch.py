@@ -99,13 +99,13 @@ def generate_launch_description():
         [FindPackageShare(description_package), "config", ur_type, "visual_parameters.yaml"]
     )
     script_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "ros_control.urscript"]
+        [FindPackageShare("ur_robot_driver"), "resources", "ros_control.urscript"]
     )
     input_recipe_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "rtde_input_recipe.txt"]
+        [FindPackageShare("ur_robot_driver"), "resources", "rtde_input_recipe.txt"]
     )
     output_recipe_filename = PathJoinSubstitution(
-        [FindPackageShare(description_package), "resources", "rtde_output_recipe.txt"]
+        [FindPackageShare("ur_robot_driver"), "resources", "rtde_output_recipe.txt"]
     )
 
     robot_description_content = Command(
@@ -157,30 +157,16 @@ def generate_launch_description():
         [FindPackageShare(description_package), "rviz", "view_robot.rviz"]
     )
 
-    # joint_state_publisher_node = Node(
-    #     package="joint_state_publisher_gui",
-    #     executable="joint_state_publisher_gui",
-    # )
+    joint_state_publisher_node = Node(
+        package="joint_state_publisher_gui",
+        executable="joint_state_publisher_gui",
+    )
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        namespace="",
-        output="screen",
+        output="both",
         parameters=[robot_description],
     )
-
-    driver_parameters = {
-        "ur_address": "0.0.0.0:30003",
-        "tf_prefix": "r1",
-    }
-
-    driver_node = Node(
-        package="ur_driver",
-        executable="ur_driver",
-        namespace="",
-        parameters=[driver_parameters],
-    )
-
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -190,9 +176,8 @@ def generate_launch_description():
     )
 
     nodes_to_start = [
-        # joint_state_publisher_node,
+        joint_state_publisher_node,
         robot_state_publisher_node,
-        driver_node,
         rviz_node,
     ]
 
