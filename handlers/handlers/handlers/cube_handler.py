@@ -15,12 +15,8 @@ class CubeHandler(Node):
 
         self.pos_state_msg = CubeState()
 
-        self.sms_client = self.create_client(ManipulateScene, "/ia_planning/manipulate_scene")
-        self.sms_request = ManipulateScene.Request()
-        self.sms_response = ManipulateScene.Response()
-        self.sms_call_success = False
-        self.sms_call_done = False
-
+        self.sms_client = self.create_client(
+            ManipulateScene, "/ia_planning/manipulate_scene")
         while not self.sms_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("sms service not available, waiting again...")
 
@@ -51,11 +47,13 @@ class CubeHandler(Node):
         return response
 
     def randomize_cubes(self):
+        # fixed initial solution since they need to hardcode this into the model...
         poses = ["pos1", "pos2", "pos3"]
         cubes = ["red_cube", "blue_cube", "green_cube"]
-        order = {
-            pose: cubes.pop(cubes.index(random.choice(cubes))) for pose in poses
-        }
+        order: dict[str, str] = dict(zip(poses, cubes))
+        # order = {
+        #     pose: cubes.pop(cubes.index(random.choice(cubes))) for pose in poses
+        # }
         for ord in order:
             self.send_change_parent_request(order[ord], ord)
         return order
@@ -77,6 +75,13 @@ class CubeHandler(Node):
         transform.rotation.z = 0.0
         transform.rotation.w = 1.0
 
+        self.sms_client = self.create_client(
+            ManipulateScene, "/ia_planning/manipulate_scene")
+        self.sms_request = ManipulateScene.Request()
+        self.sms_response = ManipulateScene.Response()
+        self.sms_call_success = False
+        self.sms_call_done = False
+
         self.sms_request.remove = False
         self.sms_request.child_frame = child
         self.sms_request.parent_frame = parent
@@ -95,7 +100,7 @@ class CubeHandler(Node):
                 else:
                     self.sms_response = response
                     self.get_logger().info(
-                        "sms service call succeded with: %s" % self.sms_response
+                        "sms service call succeeded with: %s" % self.sms_response
                     )
                     self.sms_call_success = True
                 finally:

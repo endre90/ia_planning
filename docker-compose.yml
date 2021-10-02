@@ -1,0 +1,8 @@
+version: "3.9" 
+services:
+  ui:
+    build: .
+    ports:
+      - "5901:5901"
+      - "6080:6080"
+    network_mode: bridge

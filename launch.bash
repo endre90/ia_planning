@@ -1,13 +1,6 @@
 # stop the screen saver
 killall light-locker
 
-# launch the ros stuff
-source /ros/install/setup.bash
-
-xargs -P 3 -I {} sh -c {} <<'EOF'
-ros2 launch bringup r1.launch.py
-ros2 launch bringup r2.launch.py
-ros2 launch bringup scenario_1.launch.py
-EOF
-
-
+xrandr --newmode "1600x960_60.00"  127.00  1600 1696 1864 2128  960 963 973 996 -hsync +vsync
+xrandr --addmode VNC-0 1600x960_60.00
+xrandr --size 1600x960
