@@ -17,14 +17,6 @@ def generate_launch_description():
         "big_file_paths": os.path.join(bringup_dir, "config", "paths.json")
     }
 
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        namespace="ia_planning",
-        output="screen",
-        arguments=["-d", rviz_config_file],
-    )
-
     sms_node = Node(
         package="sms",
         executable="sms",
@@ -50,7 +42,6 @@ def generate_launch_description():
 
     nodes_to_start = [
         sms_node,
-        rviz_node,
         static_visualization_node,
         cube_handler_node,
     ]
