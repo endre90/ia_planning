@@ -51,6 +51,7 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
+        <param name="initial_position">0.0</param>  <!-- initial position for the FakeSystem -->
       </joint>
       <joint name="${prefix}shoulder_lift_joint">
         <command_interface name="position">
@@ -78,6 +79,7 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
+        <param name="initial_position">0.0</param>  <!-- initial position for the FakeSystem -->
       </joint>
       <joint name="${prefix}wrist_1_joint">
         <command_interface name="position">
@@ -91,6 +93,7 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
+        <param name="initial_position">-1.57</param>  <!-- initial position for the FakeSystem -->
       </joint>
       <joint name="${prefix}wrist_2_joint">
         <command_interface name="position">
@@ -104,6 +107,7 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
+        <param name="initial_position">0.0</param>  <!-- initial position for the FakeSystem -->
       </joint>
       <joint name="${prefix}wrist_3_joint">
         <command_interface name="position">
@@ -117,6 +121,7 @@
         <state_interface name="position"/>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
+        <param name="initial_position">0.0</param>  <!-- initial position for the FakeSystem -->
       </joint>
       <sensor name="tcp_fts_sensor">
         <state_interface name="force.x"/>
@@ -131,8 +136,8 @@
       <joint name="speed_scaling">
         <state_interface name="speed_scaling_factor"/>
         <param name="initial_speed_scaling_factor">1</param>
-        <command_interface name="speed_scaling_factor_cmd"/>
-        <command_interface name="scaling_async_success"/>
+        <command_interface name="target_speed_fraction_cmd"/>
+        <command_interface name="target_speed_fraction_async_success"/>
       </joint>
 
       <joint name="gpio">

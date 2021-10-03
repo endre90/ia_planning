@@ -1,4 +1,4 @@
 {
-    "scenario_1": "/home/endre/ia_ws/src/ia_planning/meshes",
-    "scenario_2": "/home/endre/ia_ws/src/ia_planning/meshes"
+    "scenario_1": "/ros/meshes",
+    "scenario_2": "/ros/meshes"
 }

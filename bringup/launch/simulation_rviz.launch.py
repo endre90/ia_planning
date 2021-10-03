@@ -9,7 +9,7 @@ def generate_launch_description():
     rviz_config_file = os.path.join(bringup_dir, "config", "scenario_1.rviz")
 
     scenario_parameters = {
-        "scenario_path": "/home/endre/ia_ws/src/ia_planning/scenarios/scenario_1",
+        "scenario_path": "/ros/scenarios/scenario_1",
         "scenario": "scenario_1",
     }
 
